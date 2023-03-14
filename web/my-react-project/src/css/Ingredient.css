@@ -1,0 +1,13 @@
+th, td{
+    text-align: left;
+}
+
+
+.indent{
+    text-align: left;
+    text-indent: 5%;
+}
+
+p{
+    white-space: pre-wrap;
+}

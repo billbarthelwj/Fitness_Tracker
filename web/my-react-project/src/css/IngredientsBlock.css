@@ -1,0 +1,15 @@
+.ingredients-block
+{
+    display: flex;
+}
+
+.flex-child {
+    flex: 1;
+    border: 2px solid yellow;
+    margin-right: 20px;
+    padding-left: 20px;
+}  
+
+.flex-child:first-child {
+    margin-left: 20px
+} 
