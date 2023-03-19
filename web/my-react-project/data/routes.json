@@ -1,0 +1,6 @@
+{
+    "/": "/",
+    "/recipes/:id": "/recipes/:id",
+    "/recipes/:id/ingredients" : "/recipes/:id/ingredients",
+    "/recipes/:id/ingredients/:id": "/recipes/:id/ingredients/:id"
+}

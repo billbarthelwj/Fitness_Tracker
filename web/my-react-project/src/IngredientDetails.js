@@ -164,6 +164,7 @@ const IngredientsDetails = ({ingredient}) => {
             {ingredient.notes}
             <h3>URL</h3>
             {ingredient.url}
+            <br/><br/>
         </div>
     )
 }

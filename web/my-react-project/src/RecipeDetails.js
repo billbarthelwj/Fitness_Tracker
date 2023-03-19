@@ -323,6 +323,7 @@ const RecipeDetails = ({recipe}) => {
             </p>
             <h3>URL</h3>
             {recipe.url}
+            <br/><br/>
         </div>
     )
 }

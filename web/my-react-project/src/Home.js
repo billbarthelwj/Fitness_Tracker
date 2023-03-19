@@ -7,8 +7,11 @@ import AddIngredient from './AddIngredient'
 import { useEffect, useState } from "react";
 import useFetch from './useFetch';
 const Home = () => {
+    //const HOST = process.env.REACT_APP_HOST
     const HOST = process.env.REACT_APP_HOST
     const REFRESH_DATA = process.env.REACT_APP_REFRESH_DATA
+    const queryParameters = new URLSearchParams(window.location.search)
+    const name = queryParameters.get("name")
     const [buttonClicked, setButtonClicked] = useState(null)
     const [error, setError] = useState(null)
     const [recipes, setRecipes] = useState([])
@@ -19,6 +22,21 @@ const Home = () => {
     const [isEditingRecipe, setIsEditingRecipe] = useState(false)
     const [isAddingNewIngredient, setIsAddingNewIngredient] = useState(false)
     const [isEditingIngredient, setIsEditingIngredient] = useState(false)
+
+    //Quick and temporary way to switch users
+    useEffect(() => {
+        if(name){
+            fetch(HOST + process.env.REACT_APP_SET_USER + name, {
+                method: 'GET',
+                headers: {"Content-Type": "application/json"}
+            })
+        }else{
+            fetch(HOST + process.env.REACT_APP_SET_USER + process.env.REACT_APP_DEFAULT_USER, {
+                method: 'GET',
+                headers: {"Content-Type": "application/json"}
+            })
+        }
+    }, [])
     
     useEffect(() => {
         if(buttonClicked === null){
@@ -277,9 +295,9 @@ const Home = () => {
                 </div>
             :
                 <div>
-                    <h2>Recipes Collapsible Header Placeholder</h2>
+                    {/* <h2>Recipes Collapsible Header Placeholder</h2> */}
+                    <h2>Recipes</h2>
                     <div className="recipes">
-                        <br/>
                         <button type="button"
                             onClick={() => {
                                 setIsAddingNewRecipe(true)
@@ -292,11 +310,12 @@ const Home = () => {
                             }}>
                             Edit Recipe
                         </button>
+                        <br/><br/>
                         {selectedRecipe && <RecipesBlock HOST={HOST} recipes={recipes} selectedRecipe={selectedRecipe} getSelectedRecipe={getSelectedRecipe} deleteReceipe={deleteReceipe}/>}
                     </div>
-                    <h2>Ingredients Collapsible Header Placeholder</h2>
+                    {/* <h2>Ingredients Collapsible Header Placeholder</h2> */}
+                    {selectedRecipe && <h2>{selectedRecipe.name} Ingredients</h2>}
                     <div className="ingredients">
-                    <br/>
                         <button type="button"
                             onClick={() => {
                                 setIsAddingNewIngredient(true)
@@ -309,6 +328,7 @@ const Home = () => {
                             }}>
                             Edit Ingredient
                         </button>
+                        <br/><br/>
                         {selectedRecipe && selectedIngredient && <IngredientsBlock HOST={HOST} selectedRecipe={selectedRecipe} selectedIngredient={selectedIngredient} getSelectedIngredient={getSelectedIngredient} deleteIngredient={deleteIngredient}/>}
                     </div>    
                 </div>

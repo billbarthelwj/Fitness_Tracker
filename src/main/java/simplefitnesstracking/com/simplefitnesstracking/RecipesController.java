@@ -14,29 +14,38 @@ public class RecipesController {
     @Autowired
     private UserRepository userRepository;
 
+    private String username = "Guest";
+
     @GetMapping
     public ModelAndView home() {
         ModelAndView mav=new ModelAndView("index");
         return mav;
     }
 
+    //Temporary username setting with no security
+    @GetMapping("${set.user}{username}")
+    public void setUser(@PathVariable String username){
+        this.username = username.substring(0, 1).toUpperCase() + username.substring(1);
+        //System.out.println("setUsername ran: " + this.username);
+    }
+
     @GetMapping("${user.get.recipes}")
     @ResponseBody
     public ArrayList<Recipe> getRecipes(){
-        return userRepository.findByEmail("Bill").getRecipes();
+        return userRepository.findByEmail(username).getRecipes();
     }
 
     @PostMapping("${user.add.recipe}")
     public void addRecipe(@RequestBody final Recipe recipe){
         recipe.setObjectId(new ObjectId().toString());
-        User user = userRepository.findByEmail("Bill");
+        User user = userRepository.findByEmail(username);
         user.getRecipes().add(recipe);
         userRepository.save(user);
     }
 
     @PutMapping("${user.edit.recipe}{id}")
     public void editRecipe(@RequestBody final Recipe editedRecipe, @PathVariable String id){
-        User user = userRepository.findByEmail("Bill");
+        User user = userRepository.findByEmail(username);
         ArrayList<Recipe> recipes = user.getRecipes();
         int index = -1;
         for(Recipe recipe : recipes){
@@ -50,7 +59,7 @@ public class RecipesController {
 
     @DeleteMapping("${user.delete.recipe}{id}")
     public void deleteRecipe(@PathVariable String id){
-        User user = userRepository.findByEmail("Bill");
+        User user = userRepository.findByEmail(username);
         ArrayList<Recipe> recipes = user.getRecipes();
         int index = -1;
         for(Recipe recipe : recipes){
@@ -66,12 +75,10 @@ public class RecipesController {
     @PutMapping("${user.add.ingredient}{id}")
     public void addIngredient(@RequestBody final Ingredient ingredient, @PathVariable String id){
         ingredient.setObjectId(new ObjectId().toString());
-        User user = userRepository.findByEmail("Bill");
+        User user = userRepository.findByEmail(username);
         ArrayList<Recipe> recipes = user.getRecipes();
         int index = -1;
-        System.out.println("Recipe IDs");
         for(Recipe recipe : recipes){
-            System.out.println(recipe.getId());
             if(recipe.getId().equals(id)){
                 index = recipes.indexOf(recipe);
             }
@@ -83,7 +90,7 @@ public class RecipesController {
     @PutMapping("${user.edit.ingredient}{id}")
     public void editIngredient(@RequestBody final Ingredient editedIngredient, @PathVariable String id){
         
-        User user = userRepository.findByEmail("Bill");
+        User user = userRepository.findByEmail(username);
         ArrayList<Recipe> recipes = user.getRecipes();
         int recipeIndex = -1;
         for(Recipe recipe : recipes){
@@ -106,7 +113,7 @@ public class RecipesController {
     @DeleteMapping("${user.delete.ingredient}{recipeID}/{ingredientID}")
     public void deleteIngredient(@PathVariable String recipeID, @PathVariable String ingredientID){
         
-        User user = userRepository.findByEmail("Bill");
+        User user = userRepository.findByEmail(username);
         ArrayList<Recipe> recipes = user.getRecipes();
         int recipeIndex = -1;
         for(Recipe recipe : recipes){
